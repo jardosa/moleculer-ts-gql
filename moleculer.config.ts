@@ -1,5 +1,5 @@
 "use strict";
-import {BrokerOptions, Errors, MetricRegistry, ServiceBroker} from "moleculer";
+import { BrokerOptions, Errors, MetricRegistry, ServiceBroker } from "moleculer";
 
 /**
  * Moleculer ServiceBroker configuration file
@@ -63,7 +63,7 @@ const brokerConfig: BrokerOptions = {
 
 	// Define a cacher.
 	// More info: https://moleculer.services/docs/0.14/caching.html
-    cacher: null,
+	cacher: null,
 
 	// Define a serializer.
 	// Available values: "JSON", "Avro", "ProtoBuf", "MsgPack", "Notepack", "Thrift".
@@ -158,16 +158,16 @@ const brokerConfig: BrokerOptions = {
 		reporter: {
 			type: "Prometheus",
 			options: {
-					// HTTP port
-					port: 3030,
-						// HTTP URL path
-						path: "/metrics",
-						// Default labels which are appended to all metrics labels
-						defaultLabels: (registry: MetricRegistry) => ({
-						namespace: registry.broker.namespace,
-						nodeID: registry.broker.nodeID,
-					}),
-				},
+				// HTTP port
+				port: 3030,
+				// HTTP URL path
+				path: "/metrics",
+				// Default labels which are appended to all metrics labels
+				defaultLabels: (registry: MetricRegistry) => ({
+					namespace: registry.broker.namespace,
+					nodeID: registry.broker.nodeID,
+				}),
+			},
 		},
 	},
 
@@ -180,12 +180,12 @@ const brokerConfig: BrokerOptions = {
 			options: {
 				// Custom logger
 				logger: null,
-					// Using colors
-					colors: true,
-					// Width of row
-					width: 100,
-					// Gauge width in the row
-					gaugeWidth: 40,
+				// Using colors
+				colors: true,
+				// Width of row
+				width: 100,
+				// Gauge width in the row
+				gaugeWidth: 40,
 			},
 		},
 	},

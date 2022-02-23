@@ -78,7 +78,6 @@ class UsersService extends Service {
 					},
 					graphql: {
 						mutation:
-							// "register(username: String, fullName: String, email: String, password: String, author: Boolean): LoginPayload",
 							"register(input: RegisterInput!): LoginPayload",
 					},
 					handler: this.registerUser,
@@ -93,6 +92,21 @@ class UsersService extends Service {
 							"login(email: String, password: String): LoginPayload",
 					},
 					handler: this.login,
+				},
+				findUserById: {
+					params: {
+						_id: "string",
+					},
+					graphql: {
+						query: "findUserById(_id: ID!):User",
+					},
+					handler: this.findUserById,
+				},
+				resolve: {
+					params: {
+						_id: "string",
+					},
+					handler: this.resolve,
 				},
 			},
 		});
@@ -125,6 +139,8 @@ class UsersService extends Service {
 			process.env.JWT_EXPIRATION
 		);
 
+		this.broker.emit("user.logged", user.username);
+		this.broker.call("greeter.ping");
 		return {
 			authToken,
 			profile: user,
@@ -157,10 +173,38 @@ class UsersService extends Service {
 			process.env.JWT_SECRET
 		);
 
+		this.broker.emit("user.created", result.username);
+
 		return {
 			authToken,
 			profile: result,
 		};
+	}
+
+	public async findUserById(ctx: Context<{ _id: string }>) {
+		console.log("FUNCTION FIRED");
+		const doc = await this.adapter.findById(ctx.params._id);
+
+		if (!doc) {
+			throw new UserInputError(
+				"User not found"
+			);
+		}
+
+		return doc;
+
+	}
+
+	public async resolve(ctx: Context<{ _id: string }>) {
+		const doc = await this.adapter.findById(ctx.params._id);
+
+		if (!doc) {
+			throw new UserInputError(
+				"User not found"
+			);
+		}
+
+		return doc;
 	}
 }
 

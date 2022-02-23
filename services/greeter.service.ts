@@ -11,7 +11,10 @@ class GreeterService extends Service {
 					graphql: {
 						query: "ping: String",
 					},
-					handler: () => "pong!",
+					handler: () => {
+						broker.emit("ping.called");
+						return "pong!";
+					},
 				},
 				echo: {
 					graphql: {
@@ -37,6 +40,19 @@ class GreeterService extends Service {
 					},
 					handler: (ctx: Context<{ name: string }>) =>
 						`Hello ${ctx.params.name}`,
+				},
+			},
+			events: {
+				"user.created": (ctx: Context) => {
+					console.log(`User ${ctx.params} has been created`);
+				},
+				"user.logged": (ctx: Context) => {
+					console.log(
+						`User ${ctx.params} has logged in`,
+					);
+				},
+				"ping.called": () => {
+					console.log("Ping has been called");
 				},
 			},
 		});
