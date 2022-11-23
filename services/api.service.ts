@@ -7,7 +7,6 @@ import buildGqlSchema from "../graphql/buildGqlSchema";
 export default class ApiService extends Service {
 	public constructor(broker: ServiceBroker) {
 		super(broker);
-		// @ts-ignore
 		this.parseServiceSchema({
 			name: "api",
 			mixins: [

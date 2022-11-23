@@ -1,11 +1,11 @@
-/* eslint-disable prefer-arrow/prefer-arrow-functions */
+
 import { GraphQLSchema } from "graphql";
 import "reflect-metadata";
-import { buildSchema, buildSchemaSync } from "type-graphql";
+import { buildSchemaSync } from "type-graphql";
 import baseResolvers from "./base/resolvers";
 import userResolvers from "./users/resolvers";
 
-export default function buildGqlSchema(): GraphQLSchema {
+const buildGqlSchema: () => GraphQLSchema = () => {
 	const resolvers = [...baseResolvers, ...userResolvers];
 
 	const gqlSchema = buildSchemaSync({
@@ -13,4 +13,7 @@ export default function buildGqlSchema(): GraphQLSchema {
 	});
 
 	return gqlSchema;
-}
+};
+
+
+export default buildGqlSchema;
