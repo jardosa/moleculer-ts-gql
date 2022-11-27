@@ -18,4 +18,7 @@ export default class RegisterInput {
 
 	@Field({ nullable: true })
 	author?: boolean;
+
+	@Field({nullable: true})
+	avatar?: string;
 }

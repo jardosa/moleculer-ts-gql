@@ -12,6 +12,7 @@ import {
 import { format, addDays } from "date-fns";
 import MUser from "../models/user.model";
 import hashPassword from "../utils/hashPassword";
+import LoginPayload from "../graphql/users/entities/LoginPayload";
 import { UserInterface } from "./../models/user.model";
 
 class UsersService extends Service {
@@ -76,10 +77,6 @@ class UsersService extends Service {
 					params: {
 						input: "object",
 					},
-					graphql: {
-						mutation:
-							"register(input: RegisterInput!): LoginPayload",
-					},
 					handler: this.registerUser,
 				},
 				login: {
@@ -133,10 +130,10 @@ class UsersService extends Service {
 		const expiresAt = format(
 			addDays(new Date(), +process.env.JWT_EXPIRATION),
 			"yyyy-MM-dd HH:mm:ss"
-		);
+			);
 		const authToken = jwt.sign(
-			{ i: user._id.toString(), r: user.role, e: expiresAt },
-			process.env.JWT_EXPIRATION
+			{ i: user._id.toString(), e: expiresAt },
+			process.env.JWT_SECRET
 		);
 
 		this.broker.emit("user.logged", user.username);
@@ -146,9 +143,9 @@ class UsersService extends Service {
 			profile: user,
 		};
 	}
-	public async registerUser(ctx: Context<{ input: UserInterface }>) {
+	public async registerUser(ctx: Context<{ input: UserInterface }>): Promise<LoginPayload> {
 		const {
-			input: { fullName, username, email, password, avatar, author },
+			input: { username, email, password },
 		} = ctx.params;
 		// Check Email if exists
 		const doc = await this.adapter.find({

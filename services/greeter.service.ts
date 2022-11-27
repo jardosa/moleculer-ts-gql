@@ -8,21 +8,12 @@ class GreeterService extends Service {
 			name: "greeter",
 			actions: {
 				ping: {
-					graphql: {
-						query: "ping: String",
-					},
 					handler: () => {
 						broker.emit("ping.called");
-						return "pong!";
+						return "pong called from greeter service!";
 					},
 				},
 				echo: {
-					graphql: {
-						params: {
-							str: "string",
-						},
-						mutation: "echo(str: String!): String",
-					},
 					handler: (ctx: Context<{ str: string }>) => ctx.params.str,
 				},
 				hello: {

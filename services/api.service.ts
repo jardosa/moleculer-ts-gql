@@ -1,5 +1,4 @@
-import { GraphQLSchema } from "graphql";
-import { Service, ServiceBroker, Context } from "moleculer";
+import { Service, ServiceBroker } from "moleculer";
 import ApiGateway from "moleculer-web";
 import { ApolloService } from "moleculer-apollo-server";
 import buildGqlSchema from "../graphql/buildGqlSchema";
@@ -13,14 +12,21 @@ export default class ApiService extends Service {
 				ApiGateway,
 				ApolloService({
 					routeOptions: {
-						path: "/graphql",
 						cors: true,
 						mappingPolicy: "restrict",
 					},
 					serverOptions: {
 						tracing: true,
-						// Context: broker,
-						// Schema: buildGqlSchema(),
+						context: ({ req }) => {
+							const moleculerBroker = this.broker;
+							return {
+								moleculerBroker,
+								meta: {
+									token: req.headers.authorization,
+								},
+							};
+						},
+						schema: buildGqlSchema(),
 					},
 				}),
 			],
